@@ -1,0 +1,18 @@
+//using python query all the azure storage blob versions
+from azure.storage.blob import BlobServiceClient
+from azure.identity import DefaultAzureCredential
+from azure.storage.blob import BlobServiceClient
+from azure.storage.blob import ContainerClient
+
+
+connection_string = "DefaultEndpointsProtocol=https;AccountName=<storageAccountName>;AccountKey=<Account key>;EndpointSuffix=core.windows.net"
+container = ContainerClient.from_connection_string(conn_str=connection_string, container_name="test")
+blob_service_client = BlobServiceClient.from_connection_string(conn_str=connection_string)
+
+print("printing versions" + '\n') 
+blob_list = list(container.list_blobs(include=['versions']))
+for blob in blob_list:
+    print(blob.name + '\n')
+    
+    blob_client = blob_service_client.get_blob_client(container="test",blob=blob.name)
+    print(blob_client.get_blob_properties())
